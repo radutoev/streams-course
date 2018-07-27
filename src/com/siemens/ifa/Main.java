@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
@@ -24,9 +25,24 @@ public class Main {
         }
         System.out.println(result);
 
-        System.out.println(numbers.stream() //internal iterator
+        //internal iterator
+        System.out.println(numbers
+                .stream() //stream init
+                //aplicare de functii -> functional composition
                 .filter(n -> n % 2 == 0)
                 .map(n -> n * 2)
+                //terminal operation, stream termination
                 .reduce(0, (acc, x) -> acc += x));
+    }
+
+    static List<Person> generatePeople() {
+        return asList(
+            new Person("Radu", LocalDate.of(1986, 8, 6), Sex.MALE),
+            new Person("Mihai", LocalDate.of(1998, 8, 6), Sex.MALE),
+            new Person("Mihaela", LocalDate.of(1996, 8, 6), Sex.FEMALE),
+            new Person("Andreea", LocalDate.of(1989, 8, 6), Sex.FEMALE),
+            new Person("Roxana", LocalDate.of(1987, 8, 6), Sex.FEMALE),
+            new Person("Ana", LocalDate.of(1986, 8, 6), Sex.FEMALE)
+        );
     }
 }
