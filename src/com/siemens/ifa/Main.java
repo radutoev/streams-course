@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -33,6 +34,38 @@ public class Main {
                 .map(n -> n * 2)
                 //terminal operation, stream termination
                 .reduce(0, (acc, x) -> acc += x));
+
+        List<Person> people = generatePeople();
+
+//        final Predicate<Integer> gt25 = new Predicate<Integer>() {
+//            @Override
+//            public boolean test(Integer integer) {
+//                return integer > 25;
+//            }
+//        };
+        final Predicate<Integer> gt25 = age -> age > 25;
+
+        TimeIT.code(() ->
+            people.parallelStream()
+                    .map(p -> compute(p))
+                    .map(Person::age) //Person -> age (int)
+                    .filter(gt25) //age(int)
+                    .reduce(0, (acc, x) -> acc += x)
+        );
+
+        String names = people.stream()
+                .map(p -> p.getName())
+                .reduce("", (carry, n) -> carry += n + ",");
+        System.out.println(names.substring(0, names.length() - 1));
+    }
+
+    static Person compute(Person p) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return p;
     }
 
     static List<Person> generatePeople() {
